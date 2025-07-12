@@ -195,7 +195,7 @@ def main():
             best_acc = val_acc
             best_model_path = os.path.join(BEST_MODEL_DIR, f'best_{MODEL_NAME}.pth')
             torch.save(model.state_dict(), best_model_path)
-            logging.info(f"✅ New model saved to {best_model_path} with accuracy: {best_acc:.4f}")
+            logging.info(f"🐈👌🏻New model saved to {best_model_path} with accuracy: {best_acc:.4f}")
 
     logging.info(f"Finished training. Best validation accuracy: {best_acc:.4f}")
 

@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -19,6 +20,8 @@ from unet import UNet
 dir_img = Path('../data_unet/train_images')
 dir_mask = Path('../data_unet/train_masks')
 dir_checkpoint = Path('../checkpoints/unet')
+
+BEST_MODEL_DIR = '../models/unet/'
 
 
 def train_net(net,
@@ -70,6 +73,7 @@ def train_net(net,
     grad_scaler = torch.amp.GradScaler('cuda', enabled=amp)
     criterion = nn.CrossEntropyLoss()
     global_step = 0
+    best_val_score = 0
 
     # 5. Begin training
     for epoch in range(epochs):
@@ -122,6 +126,14 @@ def train_net(net,
 
                         val_score = evaluate(net, val_loader, device)
                         scheduler.step(val_score)
+
+                        # Save the best model
+                        if val_score > best_val_score:
+                            best_val_score = val_score
+                            os.makedirs(BEST_MODEL_DIR, exist_ok=True)
+                            best_model_path = os.path.join(BEST_MODEL_DIR, f'best_unet.pth')
+                            torch.save(net.state_dict(), best_model_path)
+                            logging.info(f'🐈👌🏻saved with validation Dice score🎲: {val_score:.4f}')
 
                         logging.info('Validation Dice score: {}'.format(val_score))
                         experiment.log({
