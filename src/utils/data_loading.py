@@ -98,6 +98,9 @@ class BasicDataset(Dataset):
         mask = load_image(mask_file[0])
         img = load_image(img_file[0])
 
+        if img.mode == 'RGBA':
+            img = img.convert('RGB')
+
         # --- 新增的尺寸检查和修正逻辑 ---
         if img.size != mask.size:
             # 检查是否仅仅是宽度和高度互换了
