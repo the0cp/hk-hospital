@@ -114,7 +114,42 @@ def train_net(net,
                 })
                 pbar.set_postfix(**{'loss (batch)': loss.item()})
 
-                # Evaluation round
+        # Evaluation round
+        histograms = {}
+        for tag, value in net.named_parameters():
+            tag = tag.replace('/', '.')
+            '''
+            # remove gradient logging here as it's outside the batch loop.
+            '''
+            histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
+
+        val_score = evaluate(net, val_loader, device)
+        scheduler.step(val_score)
+
+        # Save the best model
+        if val_score > best_val_score:
+            best_val_score = val_score
+            os.makedirs(BEST_MODEL_DIR, exist_ok=True)
+            best_model_path = os.path.join(BEST_MODEL_DIR, f'best_unet.pth')
+            torch.save(net.state_dict(), best_model_path)
+            logging.info(f'🐈👌🏻saved with validation Dice score🎲: {val_score:.4f}')
+
+        logging.info('Validation Dice score: {}'.format(val_score))
+        experiment.log({
+            'learning rate': optimizer.param_groups[0]['lr'],
+            'validation Dice': val_score,
+            'images': wandb.Image(images[0].cpu()),
+            'masks': {
+                'true': wandb.Image(true_masks[0].unsqueeze(0).float().cpu()),
+                'pred': wandb.Image(torch.softmax(masks_pred, dim=1).argmax(dim=1)[0].float().cpu().unsqueeze(0)),
+                # needs [C, H, W], unsure unsqueeze
+            },
+            'step': global_step,
+            'epoch': epoch,
+            **histograms
+        })
+
+        '''
                 division_step = (n_train // (10 * batch_size))
                 if division_step > 0:
                     if global_step % division_step == 0:
@@ -149,6 +184,7 @@ def train_net(net,
                             'epoch': epoch,
                             **histograms
                         })
+        '''
 
         if save_checkpoint:
             Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
