@@ -2,7 +2,7 @@ import sys
 import os
 from glob import glob
 
-MODEL_PATH = '../models/unet/MODEL.pth' 
+MODEL_PATH = '../models/unet/best_unet.pth' 
 INPUT_IMAGE_DIR = '../data_unet/predict_input/'
 OUTPUT_MASK_DIR = '../processed/predicted_masks/'
 
