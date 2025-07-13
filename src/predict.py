@@ -12,6 +12,8 @@ from utils.data_loading import BasicDataset
 from unet import UNet
 from utils.utils import plot_img_and_mask
 
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
+
 def predict_img(net,
                 full_img,
                 device,
@@ -112,4 +114,8 @@ if __name__ == '__main__':
 
         if args.viz:
             logging.info(f'Visualizing results for image {filename}, close to continue...')
-            plot_img_and_mask(img, mask)
+            if mask.ndim == 3:
+                viz_mask = np.argmax(mask, axis=0)
+            else:
+                viz_mask = mask
+            plot_img_and_mask(img, viz_mask)
