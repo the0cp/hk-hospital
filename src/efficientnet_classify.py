@@ -24,19 +24,6 @@ LEARNING_RATE = 1e-4
 VALIDATION_SPLIT = 0.2
 DEVICE = torch.device('cuda')
 
-# 数据预处理
-# bash --version
-# transform = transforms.Compose([
-#     transforms.Resize((256, 256)),
-#     transforms.ToTensor(),
-#     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
-# 
-# ])
-# transform_test = transforms.Compose([
-#     transforms.Resize((256, 256)),
-#     transforms.ToTensor(),
-#     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
-# ])
 
 # recommend
 def weights_init(m):
@@ -49,29 +36,6 @@ def weights_init(m):
     elif isinstance(m, nn.BatchNorm1d):
         nn.init.constant_(m.weight,1)
  #       nn.init.constant_(m.bias, 0)
-
-# 根据自己定义的那个勒MyDataset来创建数据集！注意是数据集！而不是loader迭代器
-#root = 'F:/RDphotos-2021-12-5/preprocessimg_resize'
-#root = 'F:/RDphotos-2021-12-5/train_set'
-# root = 'F:/RDphotos-2021-12-14_selectdata/select_generatemask/test'
-# #root = 'F:/RDphotos-2021-12-14_selectdata/select_predictmask/test'
-# root = 'F:/RDphotos-2021-12-14_selectdata/918_origimg'
-# full_data = MyDataset(root, transform=transform)
-# 
-# trainsize = int(len(full_data)*0.8)
-# testsize = len(full_data)-trainsize
-# 
-# 
-# 
-# # 导入数据
-# #full_dataload = torch.utils.data.DataLoader(full_data, batch_size=BATCH_SIZE, shuffle=False)
-# 
-# train_dataset, test_dataset = torch.utils.data.random_split(full_data, [trainsize, testsize])
-# 
-# train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, num_workers=0, shuffle=True)
-# test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, num_workers=0, shuffle=False)
-
-
 
 def adjust_learning_rate(optimizer, epoch):
     modellrnew = LEARNING_RATE * (0.2 ** (epoch // 30))
@@ -113,32 +77,6 @@ def val(model, device, val_loader, criterion):
     epoch_loss = running_loss / len(val_loader.dataset)
     epoch_acc = corrects.double() / len(val_loader.dataset)
     return epoch_loss, epoch_acc
-
-
-# 训练
-# for i in range(9):
-#     # 实例化模型并且移动到GPU
-#     criterion = nn.CrossEntropyLoss()
-# 
-#     model_ft = EfficientNet.from_pretrained('efficientnet-b' + str(i), num_classes=3)
-#     # model_ft = models.wide_resnet101_2(pretrained=False)
-#     # numFit = model_ft.fc.in_features
-#     # model_ft.fc = nn.Linear(numFit, 3)
-# 
-#     # num_ftrs = model_ft._fc.in_features
-#     # model_ft._fc = nn.Linear(num_ftrs, 4)
-#     model_ft.apply(weights_init)
-#     model_ft.to(DEVICE)
-#     # 选择简单暴力的Adam优化器，学习率调低
-#     optimizer = optim.Adam(model_ft.parameters(), lr=modellr)
-#     # recommend
-#     for epoch in range(1, EPOCHS + 1):
-# 
-#         adjust_learning_rate(optimizer, epoch)
-#         train(model_ft, DEVICE, train_loader, optimizer, epoch)
-#         val(model_ft, DEVICE, test_loader)
-#         torch.save(model_ft, 'F:/mycode/Pytorch-UNet-master/model/efficientB'+str(i)+'/'+'model'+str(epoch)+'.pth')
-
 
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
