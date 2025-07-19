@@ -14,3 +14,4 @@ __pycache__/
 *.jpg
 
 # *.pth
+data_classifier.zip

@@ -12,11 +12,6 @@ MODEL_NAME = 'efficientnet-b0'
 NUM_CLASSES = 4
 BATCH_SIZE = 16     # For data loader
 
-# classes = ('G0', 'G1','G2','G3')
-# transform_test = transforms.Compose([
-#     transforms.ToTensor(),
-#     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
-# ])
 
 data_transform = transforms.Compose([
     transforms.Resize(256),
@@ -25,41 +20,6 @@ data_transform = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 
-# DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# model = torch.load('F:/mycode/Pytorch-UNet-master/model126.pth')
-# model.eval()
-# model.to(DEVICE)
-
-#dataset_test = datasets.ImageFolder('F:/RDphotos-2021-12-5/test_set', transform_test)
-# dataset_test = datasets.ImageFolder('F:/RDphotos-2021-12-5/interesting_area_manualmask', transform_test)
-# dataset_test = datasets.ImageFolder('F:/RDphotos-2021-12-14_selectdata/select_generatemask', transform_test)
-# dataset_test = datasets.ImageFolder('F:/RDphotos-2021-12-14_selectdata/select_predictmask', transform_test)
-# print(len(dataset_test))
-# # 对应文件夹的label
-# correct = 0
-# for index in range(len(dataset_test)):
-#     item = dataset_test[index]
-#     img, label = item
-#     img.unsqueeze_(0)
-#     data = Variable(img).to(DEVICE)
-#     output = model(data)
-#     _, pred = torch.max(output.data, 1)
-# #    print(label,pred.data.item)
-# #    if int(dataset_test.imgs[index][0][37]) == pred.data.item():
-#   #  print(dataset_test.imgs[index][0][56:60])
-#     class3 = int(dataset_test.imgs[index][0][59])
-#     predictv = pred.data.item()
-#     if class3 == 3:
-#         class3 =2
-#     if pred.data.item() == 3:
-#         predictv=2
-# #    elif class3 == pred.data.item():
-#     if class3 == predictv:
-#         correct=correct+1
-#     else:
-#         print('Image Name:{},predict:{}'.format(dataset_test.imgs[index][0], classes[pred.data.item()]))
-#     index += 1
-# print('acc = ',correct/len(dataset_test))
 
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
